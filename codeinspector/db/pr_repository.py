@@ -45,17 +45,24 @@ class PRReviewRepository:
         
         self.db.conn.commit()
     
-    def save_pr_review(self, review_data: Dict) -> int:
+    def save_pr_review(self, review_data_or_pr_number, repository=None, status=None, issues_found=None, review_url=None, comments=None) -> int:
         """
-        Save a PR review to database
-        
-        Args:
-            review_data: Dict with keys: pr_number, repository, status,
-                        issues_found, review_url, comments (list of dicts)
-        
-        Returns:
-            review_id: ID of the inserted review
+        Save a PR review to database.
+        Supports both single dict argument and positional arguments for backward compatibility.
         """
+        if isinstance(review_data_or_pr_number, dict):
+            review_data = review_data_or_pr_number
+        else:
+            # Handle legacy/positional call
+            review_data = {
+                'pr_number': review_data_or_pr_number,
+                'repository': repository,
+                'status': status,
+                'issues_found': issues_found,
+                'review_url': review_url,
+                'comments': comments or []
+            }
+
         cursor = self.db.conn.cursor()
         
         # Insert PR review
