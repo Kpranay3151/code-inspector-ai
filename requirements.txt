@@ -1,0 +1,9 @@
+click
+gitpython
+pygithub
+google-generativeai
+flake8
+pytest
+coverage
+flask
+gunicorn
